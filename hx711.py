@@ -1,9 +1,9 @@
 from machine import Pin
 
+
 class HX711:
     def __init__(self, dout, pd_sck, gain=128):
-        
-        self.pSCK = Pin(pd_sck , mode=Pin.OUT)
+        self.pSCK = Pin(pd_sck, mode=Pin.OUT)
         self.pOUT = Pin(dout, mode=Pin.IN, pull=Pin.PULL_DOWN)
 
         self.GAIN = 0
@@ -11,16 +11,14 @@ class HX711:
         self.SCALE = 1
         self.lastVal = 0
         self.allTrue = False
-        
-        self.set_gain(gain);
-        
+        self.set_gain(gain)
 
     def createBoolList(size=8):
         ret = []
         for i in range(8):
             ret.append(False)
         return ret
-    
+
     def is_ready(self):
         return self.pOUT() == 0
 
@@ -37,46 +35,37 @@ class HX711:
         print('Gain setted')
 
     def read(self):
-        
-        dataBits = [self.createBoolList(), self.createBoolList(), self.createBoolList()]
+        dataBits = [self.createBoolList(),
+                    self.createBoolList(),
+                    self.createBoolList()]
         while not self.is_ready():
             pass
-              
         for j in range(2, -1, -1):
             for i in range(7, -1, -1):
                 self.pSCK.value(True)
                 dataBits[j][i] = self.pOUT()
                 self.pSCK.value(False)
 
-
-        #set channel and gain factor for next reading
+        # set channel and gain factor for next reading
         for i in range(self.GAIN):
             self.pSCK.value(True)
             self.pSCK.value(False)
-            
 
-        #check for all 1
-        if all(item == True for item in dataBits[0]):
+        # check for all 1
+        if all(item is True for item in dataBits[0]):
             print('all true')
-            self.allTrue=True
+            self.allTrue = True
             return self.lastVal
-
-        self.allTrue=False
-
-        
+        self.allTrue = False
         readbits = ""
         for j in range(2, -1, -1):
             for i in range(7, -1, -1):
-                if dataBits[j][i] == True:
-                    readbits= readbits +'1'
+                if dataBits[j][i] is True:
+                    readbits = readbits + '1'
                 else:
-                    readbits= readbits+'0'
-
+                    readbits = readbits + '0'
         self.lastVal = int(readbits, 2)
-
         return self.lastVal
-
-
 
     def read_average(self, times=3):
         sum = 0
@@ -84,9 +73,9 @@ class HX711:
         readed = 0
         for i in range(times):
             readed = self.read()
-            if self.allTrue == False:
+            if self.allTrue is False:
                 sum += readed
-                effectiveTimes+=1
+                effectiveTimes += 1
 
         if effectiveTimes == 0:
             return 0
@@ -112,7 +101,5 @@ class HX711:
         self.pSCK.value(False)
         self.pSCK.value(True)
 
-
     def power_up(self):
         self.pSCK.value(False)
-
