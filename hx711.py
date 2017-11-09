@@ -2,10 +2,11 @@ from machine import Pin
 
 
 class HX711:
-    def __init__(self, dout, pd_sck, gain=128):
+    def __init__(self, dout, pd_sck, gain=128, debug=False):
         self.pSCK = Pin(pd_sck, mode=Pin.OUT)
         self.pOUT = Pin(dout, mode=Pin.IN, pull=Pin.PULL_DOWN)
 
+        self.DEBUG = debug
         self.GAIN = 0
         self.OFFSET = 0
         self.SCALE = 1
@@ -32,7 +33,7 @@ class HX711:
 
         self.pSCK.value(False)
         self.read()
-        print('Gain setted')
+        print('Gain setted to {}'.format(self.GAIN))
 
     def read(self):
         dataBits = [self.createBoolList(),
@@ -52,15 +53,18 @@ class HX711:
             self.pSCK.value(False)
 
         # check for all 1
-        if all(item is True for item in dataBits[0]):
-            print('all true')
+        if self.DEBUG:
+            print('{}'.format(dataBits))
+        if all(item == 1 for item in dataBits[0]):
+            if self.DEBUG:
+                print('all true')
             self.allTrue = True
             return self.lastVal
         self.allTrue = False
         readbits = ""
         for j in range(2, -1, -1):
             for i in range(7, -1, -1):
-                if dataBits[j][i] is True:
+                if dataBits[j][i] == 1:
                     readbits = readbits + '1'
                 else:
                     readbits = readbits + '0'
@@ -73,6 +77,7 @@ class HX711:
         readed = 0
         for i in range(times):
             readed = self.read()
+
             if self.allTrue is False:
                 sum += readed
                 effectiveTimes += 1

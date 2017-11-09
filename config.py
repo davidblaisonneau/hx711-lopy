@@ -5,9 +5,9 @@ HX_SCALE = 50
 HX_TARE = 0
 
 # TTN Node IDs
-DEV_EUI = '<DEV_EUI>'
-APP_EUI = '<APP_EUI>'
-APP_KEY = '<APP_KEY>'
+DEV_EUI = '70B3D5499390A31C'
+APP_EUI = '70B3D57ED0007FAD'
+APP_KEY = '2455433205F12974AB5629B85490D79F'
 
 # Debug
 DEBUG_LED = True
@@ -18,10 +18,10 @@ LORA_FREQUENCY = 868100000
 LORA_DR = 5   # DR_5
 
 # Prefix of each packet
-PKT_PREFIX = b'PKT #'
+PKT_PREFIX = b'W '
 
 # Sleep time in packet send
-SLEEP_MAIN = 600
+SLEEP_MAIN = 60
 
 # Low Energy config
 DIS_WIFI = True

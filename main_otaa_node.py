@@ -70,13 +70,13 @@ while True:
     # Read the HX value
     val = hx.get_units(5)
     if c.DEBUG_CON:
-        print('read hx711 >> ', val)
+        print('hx711.read >> ', val)
     # Prepare the packet
-    pkt = c.PKT_PREFIX + bytes(val)
+    pkt = c.PKT_PREFIX + bytes([int(val)])
     # Send it
     s.send(pkt)
     if c.DEBUG_CON:
-        print('send >> ', pkt)
+        print('lora.send >> ', pkt)
     if c.DEBUG_LED:
         pycom.rgbled(c.GREEN)
         time.sleep(0.1)
@@ -88,7 +88,7 @@ while True:
         pycom.rgbled(c.BLUE)
         time.sleep(0.1)
         pycom.rgbled(c.LED_OFF)
-        print("receive << ", rx)
+        print("lora.receive << ", rx)
     # Sleep
     time.sleep(c.SLEEP_MAIN)
     i += 1

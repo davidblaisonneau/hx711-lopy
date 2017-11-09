@@ -25,7 +25,6 @@ hx.tare(c.HX_TARE)
 while True:
     # Read the HX value
     val = hx.get_units(5)
-    print(hx.get_value(3))
     if c.DEBUG_CON:
         print('hx711.read >> ', val)
     # Sleep
